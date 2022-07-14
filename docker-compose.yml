@@ -2,12 +2,40 @@ version: "3"
 
 services:
   web:
+    container_name: web
     build:
       context: .
       args:
         - DEV=true
     volumes:
       - .:/app
+    expose:
+      - 8000
     ports:
       - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgresdb
+      # - DB_USER=postgresuser
+      - DB_PASSWORD=PASSWORD@123
+
+  db:
+    container_name: db
+    restart: always
+    image: postgres
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgresdb
+      # - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=PASSWORD@123
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+
+volumes:
+  dev-db-data:
