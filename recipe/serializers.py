@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-class RecipeSerializer:
-    ...
-=======
 from rest_framework import serializers
 from .models import Recipe
 
@@ -13,4 +9,4 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
         ]
->>>>>>> Stashed changes
+
