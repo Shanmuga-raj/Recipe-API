@@ -10,3 +10,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             "id",
         ]
 
+
+class RecipeDetailSerializer:
+    ...
