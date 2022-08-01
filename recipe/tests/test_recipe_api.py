@@ -26,7 +26,7 @@ def create_recipe(user, **params):
 
 
 def detail_url(recipe_id):
-    return reverse("recipe:recipe-details", args=[recipe_id])
+    return reverse("recipe:recipe-detail", args=[recipe_id])
 
 
 class PublicRecipeAPITests(TestCase):
@@ -74,10 +74,8 @@ class PrivateRecipeAPITests(TestCase):
 
     def test_get_recipe_details(self):
         recipe = create_recipe(user=self.user)
-
-        url = detail_url(recipe)
+        url = detail_url(recipe.id)
         res = self.client.get(url)
 
         serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
-
