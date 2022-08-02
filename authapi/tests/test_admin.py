@@ -1,19 +1,14 @@
 from django.test import TestCase, Client
-from django.contrib.auth import get_user_model
 from django.urls import reverse
+from core.helper import create_user, create_superuser
 
 
 class AdminSiteTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.admin_user = get_user_model().objects.create_superuser(
-            email="fakeadmin@email.com",
-            password="FakePassword",
-        )
+        self.admin_user = create_superuser()
         self.client.force_login(self.admin_user)
-        self.user = get_user_model().objects.create_user(
-            email="fakeuser@email.com", password="FakePassword", name="Test User"
-        )
+        self.user = create_user()
 
     def test_users_list(self):
         url = reverse("admin:authapi_user_changelist")

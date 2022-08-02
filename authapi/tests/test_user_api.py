@@ -3,14 +3,13 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
+from core.helper import create_user
+
 
 CREATE_USER_URL = reverse("user:create")
 TOKEN_URL = reverse("user:token")
 USER_URL = reverse("user:user")
 
-
-def create_user(**params):
-    return get_user_model().objects.create_user(**params)
 
 
 class PublicUserApiTest(TestCase):
@@ -62,8 +61,8 @@ class PublicUserApiTest(TestCase):
 
         create_user(**user_details)
         payload = {
-            "email": user_details["email"],
-            "password": user_details["password"],
+            "email": "fake@email.com",
+            "password": "FakePassword",
         }
         res = self.client.post(TOKEN_URL, payload)
 
@@ -109,11 +108,7 @@ class PublicUserApiTest(TestCase):
 
 class PrivateUserAPI(TestCase):
     def setUp(self):
-        self.user = create_user(
-            email="fake@email.com",
-            password="FakePassword",
-            name="Fake ID",
-        )
+        self.user = create_user()
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 

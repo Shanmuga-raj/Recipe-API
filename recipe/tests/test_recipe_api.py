@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from ..models import Recipe
 from ..serializers import RecipeSerializer, RecipeDetailSerializer
+from core.helper import create_user
 
 
 RECIPES_URL = reverse("recipe:recipe-list")
@@ -42,10 +43,7 @@ class PublicRecipeAPITests(TestCase):
 class PrivateRecipeAPITests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user(
-            "fake@email.com",
-            "FakePassword",
-        )
+        self.user = create_user()
         self.client.force_authenticate(self.user)
 
     def test_recipes_get(self):
@@ -59,7 +57,7 @@ class PrivateRecipeAPITests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_recipe_limited_to_user(self):
-        other_user = get_user_model().objects.create_user(
+        other_user = create_user(
             "newfake@email.com",
             "NewFakePassword",
         )

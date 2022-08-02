@@ -1,17 +1,15 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
+from core.helper import create_user, create_superuser
 
 
 class ModelTests(TestCase):
     def test_create_user_with_email_success(self):
-        email = "test@example.com"
-        password = "testpass123"
-        user = get_user_model().objects.create_user(
-            email=email,
-            password=password,
+        user = create_user(
+            email="test@example.com",
+            password="testpass123",
         )
-        self.assertEqual(user.email, email)
-        self.assertTrue(user.check_password(password))
+        self.assertEqual(user.email, "test@example.com")
+        self.assertTrue(user.check_password("testpass123"))
 
     def test_new_user_email_normalized(self):
         sample_emails = [
@@ -22,18 +20,15 @@ class ModelTests(TestCase):
         ]
 
         for email, expected in sample_emails:
-            user = get_user_model().objects.create_user(email, "TestPassword")
+            user = create_user(email, "TestPassword")
             self.assertEqual(user.email, expected)
 
     def test_new_user_without_email_raise_error(self):
         with self.assertRaises(ValueError):
-            get_user_model().objects.create_user("", "TestPassword")
+            create_user("", "TestPassword")
 
     def test_create_superuser(self):
-        user = get_user_model().objects.create_superuser(
-            "fake@email.com",
-            "FakePassword",
-        )
+        user = create_superuser()
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
